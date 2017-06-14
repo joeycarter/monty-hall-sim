@@ -1,5 +1,7 @@
 # A Monty Hall Simulation
 
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/joeycarter/monty-hall-sim/blob/master/LICENSE)
+
 The Monty Hall Problem is a simple game of chance whose counterintuitive "solution" has bothered a number of otherwise mathematically literate people I've met over the years.
 
 Here's a short description of the game from [Wikipedia](https://en.wikipedia.org/wiki/Monty_Hall_problem):
