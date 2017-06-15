@@ -13,10 +13,10 @@ Rules of probability say that players who switch have a 2/3 chance of winning th
 
 I don't doubt that the math checks out, but I wanted a simple simulation to convince myself once and for all that you *are* in fact more likely to win if you switch doors.
 
-## Dependencies
+## Requirements
 
-* Python 3 (tested with v3.5.2)
-* NumPy (tested with v1.12.0)
+* Python 2.6+ or Python 3.3+
+* NumPy
 
 ## Usage
 
