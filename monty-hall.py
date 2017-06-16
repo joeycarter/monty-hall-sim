@@ -13,7 +13,7 @@ import warnings
 
 # Parse input arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("-v", "--verbose", help="verbose output", action="store_true")
+parser.add_argument("-v", "--verbose", action="store_true", help="verbose output")
 parser.add_argument("-N", "--ntrial", type=int, default=100, help="number of trials to run")
 args = parser.parse_args()
 
@@ -75,7 +75,7 @@ def trial(car, initSel, change):
     else:
         win = False
         if args.verbose:
-            print('Player looses!\n')
+            print('Player loses!\n')
 
     return win
 
