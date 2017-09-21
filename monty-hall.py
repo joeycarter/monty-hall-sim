@@ -1,6 +1,10 @@
-"""monty-hall.py
+# Copyright (c) 2017 Joey Carter
+#
+# See the file "LICENSE" for information on the terms & conditions for usage of
+# this software.
 
-Author: Joey Carter
+"""
+A Monty Hall Simulation
 
 """
 
@@ -8,34 +12,23 @@ from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 
 import argparse
-import numpy as np
 import warnings
-
-# Parse input arguments
-parser = argparse.ArgumentParser()
-parser.add_argument("-v", "--verbose", action="store_true", help="verbose output")
-parser.add_argument("-N", "--ntrial", type=int, default=100, help="number of trials to run")
-args = parser.parse_args()
-
-# Number of trials
-N = args.ntrial
-
-if args.verbose and N >= 200:
-    warnings.warn("This will produce a lot of output!")
-    input("Press Enter to continue...")
+import numpy as np
 
 
-def trial(car, initSel, change):
+def trial(car, initial, change, verbose=False):
     """Perform the simulation of one trial
 
     Parameters
     ----------
     car : int
         The door the car is behind (1, 2 or 3)
-    initSel : int
+    initial : int
         The player's initial door selection (1, 2 or 3)
     change : bool
         If true, the player will change their selection when asked
+    verbose : bool
+        If true, print additional information
 
     Returns
     -------
@@ -43,44 +36,44 @@ def trial(car, initSel, change):
         True if the player wins, False if they lose
     """
 
-    if args.verbose:
-        print('Player chooses door ' + str(initSel) +
+    if verbose:
+        print('Player chooses door ' + str(initial) +
               ' (car behind door ' + str(car) + ')')
 
     # Player guesses; reveal a door with a goat behind it
-    if car == initSel:
+    if car == initial:
         # Player guessed correctly; open either of the other doors
-        reveal = randExclude(car)
+        reveal = rand_exclude(car)
     else:
         # Player guessed incorrectly; open the other goat door
-        reveal = exclude(car, initSel)
+        reveal = exclude(car, initial)
 
-    if args.verbose:
+    if verbose:
         print('Door ' + str(reveal) + ' is revealed')
 
     if change:
-        finalSel = exclude(reveal, initSel)
-        if args.verbose:
-            print('Player decides to change to door ' + str(finalSel))
+        final = exclude(reveal, initial)
+        if verbose:
+            print('Player decides to change to door ' + str(final))
     else:
-        finalSel = initSel
-        if args.verbose:
-            print('Player stays with door ' + str(finalSel))
+        final = initial
+        if verbose:
+            print('Player stays with door ' + str(final))
 
     # Check if they won
-    if car == finalSel:
+    if car == final:
         win = True
-        if args.verbose:
+        if verbose:
             print('Player wins!\n')
     else:
         win = False
-        if args.verbose:
+        if verbose:
             print('Player loses!\n')
 
     return win
 
 
-def randExclude(ex):
+def rand_exclude(ex):
     """Generate a random number on interval [1,3], excluding 'ex'
 
     Parameters
@@ -112,7 +105,7 @@ def randExclude(ex):
         else:
             return 2
     else:
-        raise Exception('randExclude only works for 1, 2, 3')
+        raise Exception('rand_exclude only works for 1, 2, 3')
 
 
 def exclude(ex1, ex2):
@@ -141,13 +134,17 @@ def exclude(ex1, ex2):
         raise Exception('exclude only works for 1, 2, 3')
 
 
-def runTrials(change):
+def run_trials(N, change, verbose):
     """Run N trials, either always changing doors, or always staying
 
     Parameters
     ----------
+    N : int
+        Number of trials
     change : bool
         If True, change doors, otherwise stay
+    verbose : bool
+        If true, print additional information
     """
 
     if change:
@@ -161,12 +158,12 @@ def runTrials(change):
     cars = np.random.randint(1, 4, size=N)
 
     # Randomly set the player's initial door selection (1, 2 or 3)
-    initSels = np.random.randint(1, 4, size=N)
+    initials = np.random.randint(1, 4, size=N)
 
     nWins = 0
 
     for i in range(0, N):
-        win = trial(cars[i], initSels[i], change)
+        win = trial(cars[i], initials[i], change, verbose)
 
         if win:
             nWins += 1
@@ -179,10 +176,30 @@ def runTrials(change):
     print('Fraction of games won: ' + str(fracWon))
 
 
-# Run the simulation; always change doors
-runTrials(True)
+def main():
+    # Parse input arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-v", "--verbose", action="store_true",
+                        help="verbose output")
+    parser.add_argument("-N", "--ntrial", type=int, default=100,
+                        help="number of trials to run")
+    args = parser.parse_args()
 
-print('\n----------\n')
+    # Number of trials
+    N = args.ntrial
 
-# Run the simulation; always stay
-runTrials(False)
+    if args.verbose and N >= 200:
+        warnings.warn("This will produce a lot of output!")
+        input("Press Enter to continue...")
+
+    # Run the simulation; always change doors
+    run_trials(N, True, args.verbose)
+
+    print('\n----------\n')
+
+    # Run the simulation; always stay
+    run_trials(N, False, args.verbose)
+
+
+if __name__ == '__main__':
+    main()
